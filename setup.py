@@ -12,5 +12,5 @@ setup(name='lib-esendex',
       author='Eric Pascual (CSTB)',
       author_email='eric.pascual@cstb.fr',
       package_dir={'': 'src'},
-      packages=find_packages(),
+      packages=find_packages('src'),
       )

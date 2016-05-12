@@ -52,7 +52,7 @@ class EsendexService(object):
             <message>
                 <to>%(to)s</to>
                 <type>%(msg_type)s</type>
-                <body>%(text)s</body>
+                <body>%(message)s</body>
                 <lang>fr-FR</lang>
                 <retries>%(retries)d</retries>
             </message>
@@ -102,23 +102,23 @@ class EsendexService(object):
     def _fqtag(cls, tag):
         return "{%s}%s" % (cls.NAMESPACE, tag)
 
-    def emit_message(self, recipient, text, message_type=MSG_VOICE):
+    def emit_message(self, recipient, message, message_type=MSG_VOICE):
         """ Emit a message to a recipient.
 
         The message can be sent as either a phone call (default) or a SMS (up to 140 chars).
 
         :param str recipient: the phone number of the recipient
-        :param str text: the text of the message
+        :param str message: the text of the message
         :param int message_type: the form of the message (`MSG_VOICE` or `MSG_SMS`, defaulted to `MSG_VOICE`)
         :raise ValueError: if wrong message type, or SMS text too long
         """
         if message_type not in (self.MSG_SMS, self.MSG_VOICE):
             raise ValueError("invalid message type (%s)" % message_type)
-        if message_type == self.MSG_SMS and len(text) > 140:
+        if message_type == self.MSG_SMS and len(message) > 140:
             raise ValueError('SMS message cannot be more than 140 chars long')
 
         try:
-            text = unicode(text, 'utf-8')
+            message = unicode(message, 'utf-8')
         except TypeError:
             # was already Unicode text
             pass
@@ -128,7 +128,7 @@ class EsendexService(object):
             'from': self._sender,
             'to': recipient,
             'msg_type': ('Voice', 'SMS')[message_type],
-            'text': unicode(text),
+            'message': unicode(message),
             'retries': self._retries
         }
         url = self.HOST + self.SEND_MESSAGE_URL

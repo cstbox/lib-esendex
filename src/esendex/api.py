@@ -92,7 +92,7 @@ class EsendexService(object):
             raise ValueError('invalid sender phone number (%s)' % sender)
 
         self._tz = time_zone or 'Europe/Paris'
-        self._retries = min(1, retries)
+        self._retries = max(1, retries)
 
         self._simulate = simulate
         if debug_host:
